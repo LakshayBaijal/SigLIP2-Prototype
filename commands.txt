@@ -1,0 +1,211 @@
+SigLIP2 Grocery + Electronics Classifier — Command Reference
+==============================================================
+
+Current dataset size (as of this update): 185 classes, ~5,500 products,
+~16,700 images total. This is roughly 6x bigger than when giant-opt was
+first tried and showed no benefit over so400m — worth re-testing now that
+there's actually enough data for a bigger backbone to matter.
+
+Run everything from this folder:
+  cd "Dataset for Training SigLIP/SigLIP2_Training"
+
+
+ONE-TIME SETUP
+--------------
+pip3 install torch transformers scikit-learn pillow streamlit
+
+
+FULL TRAINING PIPELINE (run in this order)
+-------------------------------------------
+
+Step 1 — Build the train/val manifest.
+Splits by PRODUCT, not by image, so multiple photos of the same product never
+end up split across train and val (that would leak and inflate your accuracy
+number). Each class gets its own independent random seed for the split, so
+one class's product count never silently affects another class's held-out
+pick. Re-run this any time the dataset changes (new/removed products).
+
+  python3 build_manifest.py
+
+  Currently: 5,322 train products (16,133 images) + 185 val products
+  (581 images).
+
+
+Step 2 — Extract frozen SigLIP2 embeddings for every image.
+This is the slow, GPU/MPS-heavy step. Everything downstream just reads the
+cached embeddings.npz instead of re-running the backbone.
+
+  python3 extract_embeddings.py --model <MODEL_NAME> --batch-size <N>
+
+  RECOMMENDED — you said you can wait, so use the biggest backbone:
+
+    python3 extract_embeddings.py --model google/siglip2-giant-opt-patch16-384 --batch-size 4
+
+    Estimated time at current dataset size (~16,700 images): ~3 hours on
+    Apple Silicon MPS (giant-opt runs at roughly 1.3-1.7 img/s). Lower
+    --batch-size to 2 or 1 if you hit an out-of-memory error.
+
+  FALLBACK — if 3 hours is too long, or giant-opt OOMs on your machine, use
+  so400m instead (this is what's currently deployed, proven, ~5x faster):
+
+    python3 extract_embeddings.py --model google/siglip2-so400m-patch14-384 --batch-size 8
+
+    Estimated time: ~1.5 hours (~3 img/s).
+
+  Model options previously tried, with measured val accuracy (top-1 / top-5)
+  — NOTE these numbers are all from the OLD, much smaller dataset (~2,600
+  images); re-measure after Step 3 on the current ~16,700-image dataset,
+  don't trust these as still-current:
+
+    google/siglip2-base-patch16-224        68.64% / 92.12%   ~45 img/s
+    google/siglip2-so400m-patch14-384      73.94% / 93.33%   ~3 img/s    <- currently deployed
+    google/siglip2-giant-opt-patch16-384   73.79% / 93.79%   ~1.3 img/s  <- worth retrying now
+
+  Back up the current embeddings first if you want to keep comparing against
+  what's deployed:
+    cp embeddings.npz embeddings_so400m_prev.npz.bak
+
+
+Step 3 — Train + evaluate the classifier.
+Trains a nearest-prototype classifier (mean embedding per class) AND a linear
+probe (logistic regression), evaluates both on the held-out val products, and
+auto-saves whichever one scored higher to checkpoints/.
+
+  python3 train_classifier.py
+
+  Prints top-1 / top-5 accuracy for both, plus a list of the worst-performing
+  classes. Nearest-prototype has won every single comparison run so far on
+  this dataset (base, so400m, giant-opt, with/without extra data) — expect
+  it to win again, but let the script decide rather than assuming.
+
+  IMPORTANT — single train/val splits this small are noisy. For a trustworthy
+  accuracy number (not just a lucky/unlucky draw), run the 25-trial repeated
+  holdout check instead of trusting one run:
+
+    python3 -c "
+import numpy as np
+from collections import defaultdict
+from sklearn.metrics import accuracy_score, top_k_accuracy_score
+
+data = np.load('embeddings.npz', allow_pickle=True)
+X, y, product_ids = data['embeddings'], data['labels'], data['product_ids']
+classes = sorted(set(y.tolist()))
+class_to_idx = {c: i for i, c in enumerate(classes)}
+by_class_product = defaultdict(lambda: defaultdict(list))
+for i, (label, pid) in enumerate(zip(y, product_ids)):
+    by_class_product[label][pid].append(i)
+
+def run_trial(seed):
+    rng = np.random.RandomState(seed)
+    prototypes = np.zeros((len(classes), X.shape[1]), dtype=np.float32)
+    val_idxs, val_labels = [], []
+    for c in classes:
+        pids = list(by_class_product[c].keys())
+        val_pid = pids[rng.randint(len(pids))] if len(pids) >= 2 else None
+        train_idxs = [i for p in pids if p != val_pid for i in by_class_product[c][p]]
+        if not train_idxs:
+            continue
+        proto = X[train_idxs].mean(axis=0)
+        prototypes[class_to_idx[c]] = proto / np.linalg.norm(proto)
+        if val_pid is not None:
+            val_idxs.extend(by_class_product[c][val_pid])
+            val_labels.extend([c] * len(by_class_product[c][val_pid]))
+    X_val, y_val = X[val_idxs], np.array(val_labels)
+    sims = X_val @ prototypes.T
+    preds = np.array([classes[i] for i in sims.argmax(axis=1)])
+    top1 = accuracy_score(y_val, preds)
+    y_val_idx = np.array([class_to_idx[c] for c in y_val])
+    top5 = top_k_accuracy_score(y_val_idx, sims, k=5, labels=np.arange(len(classes)))
+    return top1, top5
+
+t1s, t5s = zip(*[run_trial(s) for s in range(25)])
+print(f'top1: {np.mean(t1s):.4f} +/- {np.std(t1s):.4f}')
+print(f'top5: {np.mean(t5s):.4f} +/- {np.std(t5s):.4f}')
+"
+
+  Once you're happy with the backbone/accuracy, rebuild the DEPLOYED
+  prototypes from ALL images (not holding any out — holdout only matters for
+  honest measurement, not for the live model's actual quality):
+
+    python3 -c "
+import json, numpy as np
+data = np.load('embeddings.npz', allow_pickle=True)
+X, y, model_name = data['embeddings'], data['labels'], str(data['model_name'][0])
+classes = sorted(set(y.tolist()))
+class_to_idx = {c: i for i, c in enumerate(classes)}
+prototypes = np.zeros((len(classes), X.shape[1]), dtype=np.float32)
+for c in classes:
+    proto = X[y == c].mean(axis=0)
+    prototypes[class_to_idx[c]] = proto / np.linalg.norm(proto)
+np.savez('checkpoints/prototypes.npz', prototypes=prototypes, classes=np.array(classes))
+with open('checkpoints/labels.json', 'w') as f:
+    json.dump({'classes': classes, 'model_name': model_name, 'chosen_classifier': 'prototype'}, f, indent=2)
+print('Rebuilt deployed prototypes from all', len(X), 'images.')
+"
+
+
+Step 4 (optional) — Confidence-threshold analysis.
+Shows what accuracy you get if you only auto-accept predictions above a given
+confidence, and route everything else to human review. This is the number
+that actually matters for a production deployment — not raw top-1 accuracy.
+
+  python3 confidence_analysis.py
+
+
+Step 5 — Classify a single image from the command line.
+
+  python3 classify.py "/path/to/image.jpg"
+  python3 classify.py "/path/to/image.jpg" --top 10
+
+  Shows raw cosine-similarity "confidence" (not a diluted softmax percentage)
+  with a High/Medium/Low badge calibrated against the confidence_analysis.py
+  thresholds — 85%+ similarity is roughly where "trust it" starts.
+
+
+Step 6 — Launch the Streamlit frontend.
+Upload an image (or browse the product catalog directly), get top-3 and
+top-5 predicted subcategories side by side with confidence scores.
+
+  streamlit run app.py
+
+  Opens at http://localhost:8501 — first run will be slower while it loads
+  the model into memory (cached after that). Restart it after swapping
+  checkpoints:
+    pkill -f "streamlit run app.py"
+    streamlit run app.py
+
+
+WHAT'S KNOWN-WEAK RIGHT NOW (don't chase further, by design)
+---------------------------------------------------------------
+39 subcategories are still thin (<=5 products) — mostly abstract/ambiguous
+names that don't search well as bare keywords (Biometrics, Home Alarm, Home
+Automation, Smart Switch, Sensor, Tracker Devices, Watch Strap Band, TV Part,
+etc.). Earlier attempts to auto-fill these produced wrong-category images
+(padlocks under "Biometrics", alarm clocks under "Home Alarm", wall stickers
+under "Gaming Controller") that had to be manually stripped back out — see
+scripts/fill_images_flat_log.txt and the chat history for the full list of
+what was removed and why. Decision made: leave these thin rather than risk
+more contamination. If you want to fix them, it needs targeted manual
+sourcing per category, not another bulk keyword search.
+
+
+IF YOU WANT TO SWAP MODELS LATER
+---------------------------------
+1. Re-run Step 2 with a different --model (overwrites embeddings.npz — back
+   it up first: `cp embeddings.npz embeddings_<name>.npz.bak`)
+2. Re-run Step 3, including the "rebuild deployed prototypes from ALL images"
+   snippet at the end of it.
+3. app.py and classify.py automatically pick up whatever model_name is saved
+   in checkpoints/labels.json — no code changes needed.
+
+
+RESTORING A PREVIOUS MODEL CHECKPOINT
+---------------------------------------
+Backups of earlier runs are kept as embeddings_<name>.npz.bak and
+checkpoints_<name>_bak/ in this folder (base, so400m, so400m_abo, giant).
+To roll back to one (so400m_abo shown — last known-good before this update):
+
+  cp embeddings_so400m_abo.npz.bak embeddings.npz
+  rm -rf checkpoints && cp -r checkpoints_so400m_abo_bak checkpoints
+  pkill -f "streamlit run app.py"
+  streamlit run app.py

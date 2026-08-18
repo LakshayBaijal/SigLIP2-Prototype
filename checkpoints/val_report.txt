@@ -1,0 +1,195 @@
+Chosen classifier: prototype
+Nearest-prototype: top1=0.6822 top5=0.8689
+Linear probe:      top1=0.5332 top5=0.7720
+
+                                          precision    recall  f1-score   support
+
+                  Electronics/3D Glasses       1.00      1.00      1.00         1
+                Electronics/3D Modulator       0.50      1.00      0.67         1
+                     Electronics/Adapter       0.43      1.00      0.60         3
+           Electronics/Audio Accessories       1.00      0.50      0.67         4
+                   Electronics/Batteries       0.50      1.00      0.67         3
+                  Electronics/Biometrics       1.00      1.00      1.00         4
+                       Electronics/Cable       0.67      0.67      0.67         3
+                   Electronics/Camcorder       0.00      0.00      0.00         1
+                      Electronics/Camera       0.00      0.00      0.00         1
+          Electronics/Camera Accessories       0.50      1.00      0.67         3
+                  Electronics/Camera Bag       1.00      1.00      1.00         3
+                 Electronics/Camera Lens       1.00      1.00      1.00         2
+                     Electronics/Charger       0.25      1.00      0.40         1
+        Electronics/Computer Accessories       0.83      1.00      0.91         5
+          Electronics/Computer Component       0.00      0.00      0.00         5
+           Electronics/Computer Software       1.00      1.00      1.00         1
+                 Electronics/Cooling Pad       0.50      1.00      0.67         1
+                     Electronics/Desktop       1.00      1.00      1.00         1
+         Electronics/Digital Photo Frame       1.00      0.50      0.67         4
+             Electronics/Docking Station       0.00      0.00      0.00         4
+                    Electronics/Earphone       1.00      1.00      1.00         1
+                Electronics/Ebook Reader       0.50      1.00      0.67         1
+              Electronics/Extension Cord       1.00      1.00      1.00         5
+          Electronics/Gaming Accessories       0.00      0.00      0.00         4
+                Electronics/Gaming Chair       1.00      1.00      1.00         1
+              Electronics/Gaming Console       0.00      0.00      0.00         5
+           Electronics/Gaming Controller       0.50      1.00      0.67         1
+                     Electronics/Headset       1.00      1.00      1.00         3
+                  Electronics/Home Alarm       0.80      1.00      0.89         4
+                  Electronics/Home Audio       0.00      0.00      0.00         1
+             Electronics/Home Automation       1.00      1.00      1.00         1
+                   Electronics/Home Safe       1.00      1.00      1.00         5
+      Electronics/Home Theatre Projector       0.00      0.00      0.00         5
+                    Electronics/Intercom       1.00      0.50      0.67         4
+                    Electronics/Keyboard       0.00      0.00      0.00         4
+              Electronics/Keyboard Guard       0.50      1.00      0.67         1
+                      Electronics/Laptop       0.00      0.00      0.00         1
+                  Electronics/Laptop Bag       0.17      1.00      0.29         1
+                 Electronics/Laptop Skin       1.00      1.00      1.00         2
+                Electronics/Laptop Stand       0.00      0.00      0.00         1
+                 Electronics/Memory Card       1.00      1.00      1.00         2
+                  Electronics/Microphone       0.75      1.00      0.86         3
+                Electronics/Mobile Cover       0.00      0.00      0.00         5
+                Electronics/Mobile Mount       0.38      1.00      0.55         3
+                Electronics/Mobile Phone       1.00      1.00      1.00         5
+         Electronics/Mobile Screen Guard       0.67      1.00      0.80         2
+         Electronics/Mobile Skin Sticker       1.00      1.00      1.00         1
+                     Electronics/Monitor       0.62      1.00      0.77         5
+                       Electronics/Mouse       1.00      1.00      1.00         3
+                    Electronics/Mousepad       1.00      1.00      1.00         3
+           Electronics/Networking Device       0.00      0.00      0.00         3
+                   Electronics/Pen Drive       1.00      1.00      1.00         1
+               Electronics/Photo Printer       1.00      1.00      1.00         1
+                  Electronics/Power Bank       1.00      1.00      1.00         4
+                     Electronics/Printer       1.00      1.00      1.00         1
+         Electronics/Printer Accessories       0.00      0.00      0.00         1
+                   Electronics/Projector       0.38      1.00      0.55         3
+       Electronics/Projector Accessories       1.00      1.00      1.00         5
+             Electronics/Projector Mount       0.00      0.00      0.00         2
+            Electronics/Projector Screen       0.00      0.00      0.00         5
+                      Electronics/Remote       0.00      0.00      0.00         1
+            Electronics/Screen Protector       1.00      1.00      1.00         3
+                Electronics/Selfie Stick       1.00      1.00      1.00         5
+                      Electronics/Sensor       1.00      1.00      1.00         5
+                 Electronics/Set Top Box       1.00      1.00      1.00         1
+                  Electronics/Smart Band       0.00      0.00      0.00         5
+               Electronics/Smart Glasses       1.00      1.00      1.00         1
+              Electronics/Smart Lighting       1.00      1.00      1.00         1
+                  Electronics/Smart Ring       0.50      1.00      0.67         1
+                Electronics/Smart Switch       1.00      1.00      1.00         1
+                    Electronics/Smart TV       0.75      1.00      0.86         3
+                 Electronics/Smart Watch       0.10      1.00      0.18         1
+                     Electronics/Speaker       1.00      1.00      1.00         1
+                 Electronics/Standard TV       1.00      0.80      0.89         5
+               Electronics/Storage Drive       1.00      1.00      1.00         1
+            Electronics/Streaming Device       1.00      1.00      1.00         5
+              Electronics/TV Accessories       0.33      0.20      0.25         5
+                    Electronics/TV Mount       0.71      1.00      0.83         5
+                     Electronics/TV Part       0.00      0.00      0.00         1
+                   Electronics/TV Remote       1.00      0.50      0.67         2
+                    Electronics/TV Stand       0.33      1.00      0.50         1
+                      Electronics/Tablet       1.00      1.00      1.00         1
+          Electronics/Tablet Accessories       0.00      0.00      0.00         5
+             Electronics/Tracker Devices       0.00      0.00      0.00         1
+                      Electronics/Tripod       1.00      1.00      1.00         1
+  Electronics/True Wireless Stereo (TWS)       0.20      1.00      0.33         1
+                         Electronics/UPS       1.00      1.00      1.00         1
+               Electronics/Vehicle Audio       0.83      1.00      0.91         5
+                 Electronics/Video Games       0.00      0.00      0.00         3
+                Electronics/Video Player       0.00      0.00      0.00         4
+    Electronics/Video Player Accessories       0.50      1.00      0.67         1
+     Electronics/Virtual Reality Headset       1.00      1.00      1.00         5
+            Electronics/Watch Strap Band       1.00      0.20      0.33         5
+        Electronics/Wearable Accessories       1.00      1.00      1.00         1
+                  Grocery/Air Fresheners       1.00      1.00      1.00         5
+                     Grocery/Animal Meat       1.00      1.00      1.00         3
+            Grocery/Art & Craft Supplies       0.33      1.00      0.50         1
+             Grocery/Baby Bath & Hygiene       0.00      0.00      0.00         4
+             Grocery/Baby Food & Formula       0.75      1.00      0.86         3
+                Grocery/Bags & Backpacks       0.00      0.00      0.00         5
+                   Grocery/Bakery Snacks       0.00      0.00      0.00         5
+                Grocery/Bath & Hand Wash       0.50      1.00      0.67         3
+                  Grocery/Bath Additives       1.00      1.00      1.00         4
+             Grocery/Bathing Accessories       0.56      1.00      0.71         5
+            Grocery/Bins & Bathroom Ware       1.00      1.00      1.00         5
+                   Grocery/Bird Supplies       1.00      1.00      1.00         1
+              Grocery/Biscuits & Cookies       1.00      0.67      0.80         3
+                    Grocery/Bread & Buns       1.00      0.67      0.80         3
+                Grocery/Cakes & Pastries       0.75      1.00      0.86         3
+                     Grocery/Calculators       1.00      0.33      0.50         3
+                 Grocery/Car & Shoe Care       1.00      1.00      1.00         5
+               Grocery/Carbonated Drinks       0.00      0.00      0.00         5
+                    Grocery/Cat Supplies       0.00      0.00      0.00         1
+             Grocery/Cereals & Breakfast       1.00      1.00      1.00         4
+            Grocery/Chocolates & Candies       0.00      0.00      0.00         1
+                  Grocery/Cleaning Tools       1.00      0.33      0.50         3
+                  Grocery/Cocktail Mixes       1.00      1.00      1.00         5
+                          Grocery/Coffee       1.00      1.00      1.00         3
+                 Grocery/Colors & Paints       0.00      0.00      0.00         3
+          Grocery/Cooking & Baking Needs       0.40      1.00      0.57         2
+              Grocery/Cooking Essentials       0.00      0.00      0.00         1
+                       Grocery/Cosmetics       1.00      0.67      0.80         3
+                  Grocery/Dairy & Cheese       0.50      1.00      0.67         4
+                  Grocery/Dairy Products       0.50      1.00      0.67         3
+                   Grocery/Dals & Pulses       1.00      1.00      1.00         4
+           Grocery/Detergents & Dishwash       1.00      1.00      1.00         4
+                 Grocery/Diapers & Wipes       1.00      1.00      1.00         4
+         Grocery/Disinfectant & Cleaners       0.25      1.00      0.40         1
+                    Grocery/Dog Supplies       0.00      0.00      0.00         1
+               Grocery/Dry Fruits & Nuts       0.00      0.00      0.00         3
+                            Grocery/Eggs       1.00      1.00      1.00         2
+                Grocery/Feminine Hygiene       0.44      1.00      0.62         4
+                            Grocery/Fish       1.00      1.00      1.00         3
+                   Grocery/Fish Supplies       0.44      1.00      0.62         4
+                  Grocery/Flour & Grains       1.00      1.00      1.00         5
+         Grocery/Fragrances & Deodorants       1.00      1.00      1.00         4
+                   Grocery/Frozen Snacks       0.00      0.00      0.00         4
+                          Grocery/Fruits       1.00      1.00      1.00         4
+       Grocery/Garbage & Disposable bags       1.00      1.00      1.00         1
+                            Grocery/Ghee       1.00      1.00      1.00         2
+                       Grocery/Hair Care       1.00      1.00      1.00         4
+        Grocery/Hair Tools & Accessories       0.83      1.00      0.91         5
+               Grocery/Health & Medicine       0.80      1.00      0.89         4
+                   Grocery/Health Drinks       0.50      0.80      0.62         5
+           Grocery/Ice Creams & Desserts       1.00      1.00      1.00         5
+                   Grocery/Indian Sweets       0.67      1.00      0.80         4
+            Grocery/Intimate Wash & Care       0.00      0.00      0.00         5
+                          Grocery/Juices       0.50      1.00      0.67         4
+     Grocery/Kitchen Tools & Accessories       0.00      0.00      0.00         4
+                   Grocery/Lab Equipment       1.00      1.00      1.00         5
+       Grocery/Liquid Drink Concentrates       0.00      0.00      0.00         3
+                  Grocery/Men's Grooming       1.00      1.00      1.00         1
+                            Grocery/Oils       1.00      1.00      1.00         5
+                  Grocery/Oils & Vinegar       1.00      1.00      1.00         3
+                       Grocery/Oral Care       1.00      1.00      1.00         2
+            Grocery/Painting Accessories       1.00      1.00      1.00         3
+Grocery/Pasta, Soup,Noodles & Vermicilli       0.00      0.00      0.00         3
+                  Grocery/Pens & Markers       0.62      1.00      0.77         5
+       Grocery/Pest Control & Repellents       0.43      1.00      0.60         3
+          Grocery/Pet Biometric Monitors       1.00      1.00      1.00         2
+           Grocery/Pet Grooming Supplies       0.80      1.00      0.89         4
+               Grocery/Pet Training Aids       0.00      0.00      0.00         4
+               Grocery/Pickles & Chutney       0.00      0.00      0.00         1
+        Grocery/Plant Based Alternatives       1.00      1.00      1.00         3
+                Grocery/Plant Based Fish       0.00      0.00      0.00         5
+                Grocery/Plant Based Meat       0.83      1.00      0.91         5
+                  Grocery/Pooja Supplies       1.00      0.20      0.33         5
+ Grocery/Posters, Gifts & Greeting Cards       1.00      1.00      1.00         5
+     Grocery/Powdered Drink Concentrates       0.00      0.00      0.00         5
+                   Grocery/Ready To Cook       0.00      0.00      0.00         4
+                            Grocery/Rice       0.00      0.00      0.00         3
+                    Grocery/Salt & Sugar       1.00      0.33      0.50         3
+          Grocery/Sauces, Spreads & Dips       0.25      0.67      0.36         3
+          Grocery/School Bags & Supplies       1.00      1.00      1.00         2
+                       Grocery/Skin Care       1.00      1.00      1.00         1
+                Grocery/Snacks & Namkeen       1.00      1.00      1.00         1
+                 Grocery/Spices & Masala       1.00      1.00      1.00         4
+          Grocery/Sports & Energy Drinks       0.83      1.00      0.91         5
+                         Grocery/Sprouts       1.00      1.00      1.00         3
+                             Grocery/Tea       1.00      1.00      1.00         3
+         Grocery/Tinned & Processed Food       0.00      0.00      0.00         4
+          Grocery/Tissue Paper & Napkins       1.00      1.00      1.00         4
+             Grocery/Utensils & Cookware       1.00      1.00      1.00         2
+                      Grocery/Vegetables       0.00      0.00      0.00         3
+                           Grocery/Water       0.75      1.00      0.86         3
+
+                                accuracy                           0.68       557
+                               macro avg       0.63      0.71      0.64       557
+                            weighted avg       0.63      0.68      0.63       557

@@ -1,9 +1,13 @@
-# SigLIP-Prototype
+# SigLIP2-Prototype
 
 Product-image subcategory classifier for 185 subcategories (94 Electronics +
 91 Grocery), built on a frozen [SigLIP2](https://huggingface.co/docs/transformers/model_doc/siglip2)
 vision backbone with a nearest-prototype classifier on top (no fine-tuning of
 the backbone — zero trainable parameters, just a per-class mean embedding).
+
+**Currently deployed:** `google/siglip2-giant-opt-patch16-384`, trained on
+~15,400 cleaned images. Held-out validation: **73.3% top-1 / 90.4% top-5**
+(see `checkpoints/val_report.txt` for the full per-class breakdown).
 
 ## Dataset
 
@@ -33,6 +37,15 @@ the expected folder layout).
 5. **`classify.py`** — classify a single image from the command line.
 6. **`app.py`** — Streamlit demo: upload an image (or browse the product
    catalog) and see top-3/top-5 predicted subcategories with confidence.
+7. **`product_review_app.py`** — audit dashboard: every product in a
+   subcategory with its images grouped together, model prediction laid next
+   to the CSV's ground-truth label. Uses the already-cached embeddings, so
+   it's instant — no live model forward pass.
+8. **`embed_bigbasket.py`** + **`bigbasket_eval_app.py`** — evaluates the
+   deployed model against the BigBasket retail catalog, an external dataset
+   with its own taxonomy. Separates products already merged into training
+   from genuinely unseen ones, so accuracy on the unseen set is honest
+   evidence of generalization rather than memorization.
 
 ## Setup
 
@@ -60,6 +73,8 @@ instructions for rebuilding deployed prototypes from the full dataset.
 - Training/eval scripts (`build_manifest.py`, `extract_embeddings.py`,
   `train_classifier.py`, `confidence_analysis.py`, `classify.py`)
 - `app.py` — Streamlit frontend
+- `product_review_app.py`, `embed_bigbasket.py`, `bigbasket_eval_app.py` —
+  audit/evaluation tooling (see above)
 - `checkpoints/` — the currently deployed prototype vectors + label map
   (small, ~1MB — this is the trained model, not the dataset)
 - `commands.txt` — full command reference and notes

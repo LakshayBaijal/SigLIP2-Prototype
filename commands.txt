@@ -15,6 +15,39 @@ ONE-TIME SETUP
 pip3 install torch transformers scikit-learn pillow streamlit
 
 
+DATASET WORK (do this BEFORE retraining)
+-----------------------------------------
+
+Review images by hand and delete the wrong ones:
+
+  cd "../Review_Tool" && streamlit run review_app.py     # opens on :8502
+
+  Browse one subcategory at a time, click Delete on anything that doesn't
+  belong. Deletes are SOFT — files move to ../_Trash/ and are logged to
+  trash_log.jsonl, with one-click undo in the sidebar. Nothing is ever
+  permanently destroyed. "Mark reviewed" tracks progress across sessions.
+
+Top every subcategory up to N images from image search:
+
+  cd "../scripts"
+  python3 fetch_images_bulk.py --dry-run              # show the plan first
+  python3 fetch_images_bulk.py --target 30            # do it
+  python3 fetch_images_bulk.py --subcategory "Smart Ring" --target 40
+
+  Uses Bing Images (primary) + DuckDuckGo (fallback). NOT Google — Google
+  answers the first unauthenticated request with 429 + CAPTCHA and cannot be
+  scraped from here. NOT Amazon/Snapdeal — retail catalog search is what
+  produced the wrong-category contamination in the first place.
+
+  Only ever ADDS files. Backs up the product CSV before appending. Dedupes by
+  perceptual hash against both the existing folder AND ../_Trash/, so images
+  you reviewed and deleted are never re-downloaded on a later run.
+
+After either of the above, rebuild the manifest before retraining:
+
+  cd "../SigLIP2_Training" && python3 build_manifest.py
+
+
 FULL TRAINING PIPELINE (run in this order)
 -------------------------------------------
 

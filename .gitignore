@@ -11,3 +11,6 @@ checkpoints_*_bak/
 *_auto.csv
 fetch_images_ddg_log.txt
 fill_images_flat_log.txt
+bigbasket_embeddings.npz
+bigbasket_embeddings_checkpoint.npz
+*.log
